@@ -1,21 +1,106 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Password Security Dashboard</title>
+    <title>Passwort Sicherheit</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>🔐 Password Security Checker</h1>
 
-        <form method="POST">
-            <input type="text" name="password" placeholder="Enter password..." required>
-            <button type="submit">Check</button>
-        </form>
+<div class="container">
 
-        {% if result %}
-            <p>{{ result }}</p>
-        {% endif %}
+    <h1>Wie sicher ist mein Passwort?</h1>
+
+    <input
+        type="password"
+        id="password"
+        maxlength="20"
+        oninput="analyzePassword()"
+    >
+
+    <p class="warning">
+        Aus Sicherheitsgründen solltest du nicht deine echten Passwörter eingeben.
+    </p>
+
+    <div class="result" id="result" style="display:none;">
+        <p>
+            Ein herkömmlicher PC könnte dein Passwort innerhalb von
+        </p>
+
+        <h2 id="time"></h2>
+
+        <p>
+            knacken.
+        </p>
     </div>
+
+    <p class="disclaimer">
+        (Der Seitenbetreiber gibt keine Gewähr auf die Angabe und deren Korrektheit.)
+    </p>
+
+</div>
+
+<script>
+function calculateCharset(password) {
+    let charset = 0;
+
+    if (/[a-z]/.test(password)) charset += 26;
+    if (/[A-Z]/.test(password)) charset += 26;
+    if (/[0-9]/.test(password)) charset += 10;
+    if (/[^A-Za-z0-9]/.test(password)) charset += 32;
+
+    return charset;
+}
+
+function estimateTime(password) {
+    let charset = calculateCharset(password);
+    let length = password.length;
+
+    if (charset === 0 || length === 0) return null;
+
+    let combinations = Math.pow(charset, length);
+    let attempts = 10000000000;
+
+    return combinations / attempts;
+}
+
+function formatTime(seconds) {
+    if (!seconds) return "";
+
+    let minute = 60;
+    let hour = 60 * minute;
+    let day = 24 * hour;
+    let year = 365 * day;
+
+    if (seconds < minute) return Math.floor(seconds) + " Sekunden";
+    if (seconds < hour) return Math.floor(seconds / minute) + " Minuten";
+    if (seconds < day) return Math.floor(seconds / hour) + " Stunden";
+    if (seconds < year) return Math.floor(seconds / day) + " Tage";
+
+    let years = seconds / year;
+
+    if (years < 1_000_000) return Math.floor(years) + " Jahre";
+    if (years < 1_000_000_000) return Math.floor(years / 1_000_000) + " Millionen Jahre";
+    if (years < 1_000_000_000_000) return Math.floor(years / 1_000_000_000) + " Milliarden Jahre";
+
+    return Math.floor(years / 1_000_000_000_000) + " Billionen Jahre";
+}
+
+function analyzePassword() {
+    let password = document.getElementById("password").value;
+    let resultBox = document.getElementById("result");
+    let timeText = document.getElementById("time");
+
+    let seconds = estimateTime(password);
+
+    if (!seconds) {
+        resultBox.style.display = "none";
+        return;
+    }
+
+    resultBox.style.display = "block";
+    timeText.innerText = formatTime(seconds);
+}
+</script>
+
 </body>
 </html>
