@@ -2,6 +2,13 @@
 
 A simple web app that shows how long it would take to crack a password.
 
+## 🚀 Features
+
+* Live password analysis (updates while typing)
+* Estimated crack time (seconds → billions of years)
+* simple, clean UI
+* No data is stored or sent anywhere
+
 ## 🛠 Tech Stack
 
 * Python (Flask)
@@ -24,6 +31,11 @@ http://127.0.0.1:5000
 
 This tool is for educational purposes only.
 Do not enter real passwords.
+
+## 💡 Idea
+
+Shows how password complexity affects security and how fast weak passwords can be cracked.
+
 
 Hompage:
 
