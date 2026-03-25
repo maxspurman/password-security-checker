@@ -16,7 +16,7 @@ function estimateTime(password) {
     if (charset === 0 || length === 0) return null;
 
     let combinations = Math.pow(charset, length);
-    let attempts = 10000000;
+    let attempts = 10_000_000_000; // assumed attempts per second (brute-force rate)
 
     return combinations / attempts;
 }
