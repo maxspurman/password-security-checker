@@ -39,68 +39,8 @@
 
 </div>
 
-<script>
-function calculateCharset(password) {
-    let charset = 0;
-
-    if (/[a-z]/.test(password)) charset += 26;
-    if (/[A-Z]/.test(password)) charset += 26;
-    if (/[0-9]/.test(password)) charset += 10;
-    if (/[^A-Za-z0-9]/.test(password)) charset += 32;
-
-    return charset;
-}
-
-function estimateTime(password) {
-    let charset = calculateCharset(password);
-    let length = password.length;
-
-    if (charset === 0 || length === 0) return null;
-
-    let combinations = Math.pow(charset, length);
-    let attempts = 10000000000;
-
-    return combinations / attempts;
-}
-
-function formatTime(seconds) {
-    if (!seconds) return "";
-
-    let minute = 60;
-    let hour = 60 * minute;
-    let day = 24 * hour;
-    let year = 365 * day;
-
-    if (seconds < minute) return Math.floor(seconds) + " Sekunden";
-    if (seconds < hour) return Math.floor(seconds / minute) + " Minuten";
-    if (seconds < day) return Math.floor(seconds / hour) + " Stunden";
-    if (seconds < year) return Math.floor(seconds / day) + " Tage";
-
-    let years = seconds / year;
-
-    if (years < 1_000_000) return Math.floor(years) + " Jahre";
-    if (years < 1_000_000_000) return Math.floor(years / 1_000_000) + " Millionen Jahre";
-    if (years < 1_000_000_000_000) return Math.floor(years / 1_000_000_000) + " Milliarden Jahre";
-
-    return Math.floor(years / 1_000_000_000_000) + " Billionen Jahre";
-}
-
-function analyzePassword() {
-    let password = document.getElementById("password").value;
-    let resultBox = document.getElementById("result");
-    let timeText = document.getElementById("time");
-
-    let seconds = estimateTime(password);
-
-    if (!seconds) {
-        resultBox.style.display = "none";
-        return;
-    }
-
-    resultBox.style.display = "block";
-    timeText.innerText = formatTime(seconds);
-}
-</script>
+<!-- EXTERNES JS -->
+<script src="/static/script.js"></script>
 
 </body>
 </html>
